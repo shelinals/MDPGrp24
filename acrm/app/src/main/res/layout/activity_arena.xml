@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_exploration_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/exploration_time"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="20dp"
+        android:width="130dp"
+        android:text="@string/exp_btn"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tv_exploration_time"
+        android:onClick="onBtnStartPressed"/>
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="20dp"
+        android:width="130dp"
+        android:text="@string/stop"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tv_exploration_time"
+        android:onClick="onBtnStopPressed"/>
+
+    <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="20dp"
+        android:text="@string/reset"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/btn_stop"
+        android:onClick="onBtnResetPressed"/>
+
+    <Button
+        android:id="@+id/btn_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_arena"
+        android:textSize="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:onClick="onBtn"/>
+
+    <mdpgrp24.ntu.com.acrm.PixelGridView
+        android:id="@+id/pixelGridView"
+        android:layout_width="465dp"
+        android:layout_height="620dp"
+        android:layout_below="@+id/btn_start"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_exploration_time"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/timer_default"
+        android:textStyle="bold"
+        android:textSize="32dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ToggleButton
+        android:id="@+id/togglebtn_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:textOff="@string/exploration"
+        android:textOn="@string/fastestwaypoint"
+        android:onClick="onTogglebtnModePressed"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/tv_timer" />
+
+    <TextView
+        android:id="@+id/robot_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/robot_start"
+        android:textSize="17dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/tv_timer"
+        android:layout_alignStart="@+id/tv_timer" />
+
+    <TextView
+        android:id="@+id/waypoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="12dp"
+        android:text="@string/waypoint"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="17dp"
+        android:layout_below="@+id/select_start"
+        android:layout_alignEnd="@+id/robot_start" />
+
+    <Button
+        android:id="@+id/select_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/robot_start"
+        android:layout_below="@+id/robot_start"
+        android:layout_marginTop="12dp"
+        android:text="@string/select"
+        android:onClick="onBtnRobotStart"/>
+
+    <Button
+        android:id="@+id/select_waypoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/robot_start"
+        android:layout_below="@+id/waypoint"
+        android:layout_marginTop="12dp"
+        android:text="@string/select"
+        android:onClick="onBtnWaypoint"/>
+
+    <TextView
+        android:id="@+id/update_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_waypoint"
+        android:layout_toLeftOf="@id/pixelGridView"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="17dp"
+        android:text="@string/update_mode" />
+
+    <ToggleButton
+        android:id="@+id/togglebtn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="@string/manual"
+        android:textOn="@string/auto"
+        android:onClick="onTogglebtnUpdatePressed"
+        android:layout_below="@id/update_mode"
+        android:layout_marginTop="12dp"
+        android:layout_alignStart="@id/robot_start"
+    />
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/togglebtn_update"
+        android:layout_below="@+id/togglebtn_update"
+        android:layout_marginTop="12dp"
+        android:text="@string/update"
+        android:onClick="onBtnUpdatePressed"/>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tv_exploration_time"
+        android:layout_below="@+id/pixelGridView"
+        android:textSize="20dp"
+        android:text="@string/robot_status" />
+
+    <TextView
+        android:id="@+id/tv_status_text_box"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/tv_status"
+        android:layout_marginTop="10dp"
+        android:layout_alignStart="@id/tv_exploration_time"
+        android:text="@string/test"
+        android:textSize="20dp"
+        android:maxLines="6"
+        android:scrollbars="vertical"
+        android:background="@drawable/back"/>
+
+    <Button
+        android:id="@+id/btn_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pixelGridView"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/btn_reset"
+        android:text="UP"
+        android:onClick="onBtnForwardPressed"/>
+
+    <Button
+        android:id="@+id/btn_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_up"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/tv_status_text_box"
+        android:text="LEFT"
+        android:layout_toLeftOf="@+id/btn_down"
+        android:onClick="onBtnLeftPressed"/>
+
+    <Button
+        android:id="@+id/btn_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/btn_up"
+        android:text="RIGHT"
+        android:onClick="onBtnRightPressed"/>
+
+    <Button
+        android:id="@+id/btn_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DOWN"
+        android:onClick="onBtnDownPressed"
+        android:layout_marginTop="45dp"
+        android:layout_below="@+id/btn_up"
+        android:layout_alignStart="@+id/btn_up" />
+
+</RelativeLayout>

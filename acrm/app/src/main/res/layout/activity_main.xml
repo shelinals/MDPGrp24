@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <!-- layout_width = 375dp / layout_height = 500dp -->
+
+    <!--
+    <Button
+        android:id="@+id/btn_start1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pixelGridView"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
+        android:text="@string/start" />
+        -->
+
+    <Button
+        android:id="@+id/btn_f1"
+        android:layout_width="600px"
+        android:layout_height="wrap_content"
+        android:text="@string/f1"
+        android:onClick="onBtnF1Pressed"
+        android:layout_marginTop="55dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btn_f2"
+        android:layout_width="600px"
+        android:layout_height="wrap_content"
+        android:text="@string/f2"
+        android:onClick="onBtnF2Pressed"
+        android:layout_below="@+id/btn_f1"
+        android:layout_alignLeft="@+id/btn_f1"
+        android:layout_alignStart="@+id/btn_f1" />
+
+    <Button
+        android:id="@+id/btn_Arena"
+        android:layout_width="600px"
+        android:layout_height="wrap_content"
+        android:text="@string/arena"
+        android:layout_below="@+id/btn_f2"
+        android:layout_alignLeft="@+id/btn_f1"
+        android:layout_marginTop="100px"
+        android:layout_alignStart="@+id/btn_f1"
+        android:onClick="onBtnToArenaPressed"/>
+
+
+</RelativeLayout>
