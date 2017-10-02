@@ -56,11 +56,11 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
 
-
     // Name of the connected device
     private String mConnectedDeviceName = null;
     private BluetoothAdapter mBluetoothAdapter = null;
     // Member object for the chat services
+
     //NEED TO GO LOOK FURTHER
     private BluetoothChatService mChatService = null;
     private BluetoothConnect BTConn = null;
@@ -75,6 +75,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     Button btnStop; //Stop button
     Button btnReset;
     ToggleButton togglebtnUpdate;
+    ToggleButton togglebtnMode;
     Button btnUpdate;
 
     //CAN BE CHANGED
@@ -90,13 +91,15 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     boolean startclick = true;
     boolean waypointclick = true;
 
+    boolean exploration = true; //if else then fastest path
+
     Handler mapHandler = new Handler();
     Runnable mapRunnable = new Runnable() {
         public void run() {
             //btnUpdate.performClick();
             onBtnUpdatePressed(null);
 
-            mapHandler.postDelayed(this, 5000);
+            mapHandler.postDelayed(this, 1000);
         }
     };
 
@@ -125,7 +128,11 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private void SetupBTService(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BTConn = (BluetoothConnect) getApplication();
-        mChatService = BTConn.getBluetoothConnectedThread();
+        if (BTConn.getBluetoothConnectedThread() != null) {
+            mChatService = BTConn.getBluetoothConnectedThread();
+            mChatService.setHandler(mHandler);
+            mConnectedDeviceName = BTConn.getDeviceName();
+        }
     }
 
     @Override
@@ -139,21 +146,18 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
         setContentView(R.layout.activity_arena);
         //img = (ImageView)findViewById(R.id.pixelGridView);
-        //SGD = new ScaleGestureDetector(this,new ScaleListener());
+        //SGD = new ScaleGesturtheDetector(this,new ScaleListener());
 
         mSensorManager = (SensorManager) getSystemService(ArenaActivity.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
 
-//        // If the adapter is null, then Bluetooth is not supported
-//        if (mBluetoothAdapter == null) {
-//            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-//            finish();
-//            return;
-//        }
-
-//        Intent intent = new Intent(this, DeviceListActivity.class);
-//        startActivityForResult(intent, 1);
+        // If the adapter is null, then Bluetooth is not supported
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         pgv = (PixelGridView) findViewById(R.id.pixelGridView);
 
@@ -166,24 +170,23 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         btnStop = (Button) findViewById(R.id.btn_stop);
         btnReset = (Button) findViewById(R.id.btn_reset);
         togglebtnUpdate = (ToggleButton) findViewById(R.id.togglebtn_update);
+        togglebtnMode = (ToggleButton) findViewById(R.id.togglebtn_mode);
 
         btnUpdate = (Button) findViewById(R.id.btn_update);
 
         //functionPref = new FunctionPreference(getApplicationContext());
         btnStop.setEnabled(false);
+        btnStop.setVisibility(View.INVISIBLE);
         pgv.setNumColumns(15);
         pgv.setNumRows(20);
 
-//        mapHandler.post(new Runnable() {
-//        	public void run() {
-//        		//btnUpdate.performClick();
-//        		onBtnUpdatePressed(null);
-//
-//        		mapHandler.postDelayed(this, 30000);
-//        	}
-//        });
-
-        sendMessage("ArenaActivity Started!");
+        mapHandler.post(new Runnable() {
+        	public void run() {
+        		//btnUpdate.performClick();
+        		onBtnUpdatePressed(null);
+        		//mapHandler.postDelayed(this, 30000);
+        	}
+        });
     }
 
 
@@ -235,7 +238,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 //            }
 //        }
 //    }
-
+//
 //    @Override
 //    public synchronized void onResume() {
 //        super.onResume();
@@ -327,15 +330,17 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     }
                     break;
                 case MESSAGE_WRITE:
-                    //byte[] writeBuf = (byte[]) msg.obj;
+                    byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
-                    //String writeMessage = new String(writeBuf);
-                    //mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    String writeMessage = new String(writeBuf);
+                    Log.d(TAG, writeMessage);
                     break;
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    tvStatus.setText(readMessage);
+                    Log.d(TAG, readMessage);
 
                     //for robot
                     if (readMessage.contains("GRID=")) {
@@ -585,18 +590,31 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnStartPressed(View view) {
+        //robot
 //        sendMessage("pstart:e");
+        //amd
+        if(exploration){
+            sendMessage("beginExplore");
+        }
+        else {
+            sendMessage("beginFastest");
+        }
         startTime1 = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
         btnStart.setEnabled(false);
+        btnStart.setVisibility(View.INVISIBLE);
         btnStop.setEnabled(true);
+        btnStop.setVisibility(View.VISIBLE);
     }
 
     public void onBtnStopPressed(View view) {
         timerHandler.removeCallbacks(timerRunnable);
+        //robot
 //        sendMessage("pstop");
         btnStart.setEnabled(true);
+        btnStart.setVisibility(View.VISIBLE);
         btnStop.setEnabled(false);
+        btnStop.setVisibility(View.INVISIBLE);
     }
 
     public void onBtnResetPressed(View view) {
@@ -618,19 +636,21 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onTogglebtnModePressed(View view) {
-        if(togglebtnUpdate.isChecked()) {
+        if(togglebtnMode.isChecked()) {
             //isChecked == true == fpw
+            exploration = false;
             ((TextView)findViewById (R.id.tv_exploration_time)).setText (R.string.fpw_time);
             ((Button)findViewById(R.id.btn_start)).setText(R.string.fpw_btn);
         } else {
             //isChecked == false == exploration
+            exploration = true;
             ((TextView)findViewById (R.id.tv_exploration_time)).setText (R.string.exploration_time);
             ((Button)findViewById(R.id.btn_start)).setText(R.string.exp_btn);
         }
     }
 
     public void onBtnUpdatePressed(View view) {
-//        sendMessage("GRID");
+        sendMessage("GRID");
         //request map from rpi/pc
     }
 

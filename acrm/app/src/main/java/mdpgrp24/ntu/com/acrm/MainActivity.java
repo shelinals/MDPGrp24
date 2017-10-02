@@ -79,7 +79,6 @@ public class MainActivity extends Activity {
             startActivityForResult(intent, 1);
         }
 
-
         functionPref = new FunctionPreference(getApplicationContext());
 
         // btnStop2.setEnabled(false);
@@ -159,6 +158,7 @@ public class MainActivity extends Activity {
 
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
+
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -211,14 +211,13 @@ public class MainActivity extends Activity {
 //	        if(D) Log.e(TAG, "-- ON STOP --");
 //	    }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        // Stop the Bluetooth chat services
-//        if (mChatService != null) mChatService.stop();
-//
-//        if (D) Log.e(TAG, "--- ON DESTROY ---");
-//    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth chat services
+        if (mChatService != null) mChatService.stop();
+        if (D) Log.e(TAG, "--- ON DESTROY ---");
+    }
 
 
     private final void setStatus(int resId) {
@@ -263,7 +262,6 @@ public class MainActivity extends Activity {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-
 
                     break;
                 case MESSAGE_DEVICE_NAME:
