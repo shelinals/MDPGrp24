@@ -74,8 +74,10 @@ public class MainActivity extends Activity {
             return;
         }
 
-        Intent intent = new Intent(this, DeviceListActivity.class);
-        startActivityForResult(intent, 1);
+        if (mBluetoothAdapter == null) {
+            Intent intent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(intent, 1);
+        }
 
 
         functionPref = new FunctionPreference(getApplicationContext());
@@ -209,14 +211,14 @@ public class MainActivity extends Activity {
 //	        if(D) Log.e(TAG, "-- ON STOP --");
 //	    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Stop the Bluetooth chat services
-        if (mChatService != null) mChatService.stop();
-
-        if (D) Log.e(TAG, "--- ON DESTROY ---");
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        // Stop the Bluetooth chat services
+//        if (mChatService != null) mChatService.stop();
+//
+//        if (D) Log.e(TAG, "--- ON DESTROY ---");
+//    }
 
 
     private final void setStatus(int resId) {
@@ -339,8 +341,16 @@ public class MainActivity extends Activity {
         sendMessage(function_pref_string_f2);
     }
 
+    public void onBtnToArenaPressed(View view){
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED){
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Intent intent = new Intent(this, ArenaActivity.class);
+            startActivity(intent);
+        }
 
-
+    }
 
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything

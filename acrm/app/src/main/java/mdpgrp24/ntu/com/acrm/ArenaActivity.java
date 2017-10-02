@@ -128,8 +128,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         mChatService = BTConn.getBluetoothConnectedThread();
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -302,8 +300,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnExitPressed(View view){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            onBackPressed();
     }
 
     // The Handler that gets information back from the BluetoothChatService
