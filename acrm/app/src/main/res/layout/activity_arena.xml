@@ -183,13 +183,35 @@
     <TextView
         android:id="@+id/tv_status_text_box"
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="40dp"
         android:layout_below="@id/tv_status"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_alignStart="@id/tv_exploration_time"
         android:text="@string/test"
+        android:textSize="35dp"
+        android:maxLines="2"
+        android:scrollbars="vertical"
+        android:background="@drawable/back"/>
+
+    <TextView
+        android:id="@+id/tv_mdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_alignStart="@+id/tv_exploration_time"
+        android:layout_below="@+id/tv_status_text_box"
         android:textSize="20dp"
-        android:maxLines="6"
+        android:text="@string/mdf" />
+
+    <TextView
+        android:id="@+id/tv_mdf_content"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/tv_mdf"
+        android:layout_marginTop="5dp"
+        android:layout_alignStart="@id/tv_exploration_time"
+        android:textSize="40dp"
+        android:maxLines="3"
         android:scrollbars="vertical"
         android:background="@drawable/back"/>
 

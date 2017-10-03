@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ArenaActivity extends Activity implements SensorEventListener {
 
     //MISSING IMPLEMENTATION
@@ -70,6 +74,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     //FunctionPreference functionPref;
     TextView tvStatus;
+    TextView tvMDF;
     TextView tvTimer;
     Button btnStart;
     Button btnStop; //Stop button
@@ -161,6 +166,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
         pgv = (PixelGridView) findViewById(R.id.pixelGridView);
 
+        tvMDF = (TextView) findViewById(R.id.tv_mdf_content);
         tvStatus = (TextView) findViewById(R.id.tv_status_text_box);
         tvStatus.setMovementMethod(new ScrollingMovementMethod());
 
@@ -358,45 +364,60 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         pgv.mapInString(map, col, row, direction);
                     }
 
-                    if(readMessage.contains("GRID 5")) {
-                        int row = Integer.parseInt(readMessage.substring(readMessage.indexOf("5"), readMessage.indexOf("5")+1));
-
-                        if(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3).equals("5")) {
-                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3));
-                            pgv.setNumColumns(column);
-                            pgv.setNumRows(row);
-
-                            String map = readMessage.substring(readMessage.indexOf("5")+12, readMessage.length());
-                            pgv.mapInStringAMD(map, column, row);
-                        } else {
-                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+4));
-                            pgv.setNumColumns(column);
-                            pgv.setNumRows(row);
-                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
-                            pgv.mapInStringAMD(map, column, row);
-                        }
-                    } else if (readMessage.contains("GRID 10") ||
-                            readMessage.contains("GRID 15") ||
-                            readMessage.contains("GRID 20") ||
-                            readMessage.contains("GRID 25") ||
-                            readMessage.contains("GRID 30")) {
-                        int row = Integer.parseInt(readMessage.substring(5, 7));
-
-                        if(readMessage.substring(8,9).equals("5")) {
-                            int column = Integer.parseInt(readMessage.substring(8,9));
-                            pgv.setNumColumns(column);
-                            pgv.setNumRows(row);
-                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
-                            pgv.mapInStringAMD(map, column, row);
-                        } else {
-                            int column = Integer.parseInt(readMessage.substring(8, 10));
-                            pgv.setNumColumns(column);
-                            pgv.setNumRows(row);
-                            String map = readMessage.substring(18);
-
-                            pgv.mapInStringAMD(map, column, row);
+                    //amd
+                    if(readMessage.contains("grid")){
+                        System.out.println("contains grid!!");
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            String jString = jObject.getString("grid");
+                            System.out.println("contains grid jString!!"+jString);
+                            JSONArray jArray = jObject.getJSONArray("robotPosition");
+                            System.out.println(jArray);
+                            pgv.mapInStringAMD(jString, jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data" + e.toString());
                         }
                     }
+
+//                    if(readMessage.contains("GRID 5")) {
+//                        int row = Integer.parseInt(readMessage.substring(readMessage.indexOf("5"), readMessage.indexOf("5")+1));
+//
+//                        if(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3).equals("5")) {
+//                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3));
+//                            pgv.setNumColumns(column);
+//                            pgv.setNumRows(row);
+//
+//                            String map = readMessage.substring(readMessage.indexOf("5")+12, readMessage.length());
+//                            pgv.mapInStringAMD(map, column, row);
+//                        } else {
+//                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+4));
+//                            pgv.setNumColumns(column);
+//                            pgv.setNumRows(row);
+//                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
+//                            pgv.mapInStringAMD(map, column, row);
+//                        }
+//                    } else if (readMessage.contains("GRID 10") ||
+//                            readMessage.contains("GRID 15") ||
+//                            readMessage.contains("GRID 20") ||
+//                            readMessage.contains("GRID 25") ||
+//                            readMessage.contains("GRID 30")) {
+//                        int row = Integer.parseInt(readMessage.substring(5, 7));
+//
+//                        if(readMessage.substring(8,9).equals("5")) {
+//                            int column = Integer.parseInt(readMessage.substring(8,9));
+//                            pgv.setNumColumns(column);
+//                            pgv.setNumRows(row);
+//                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
+//                            pgv.mapInStringAMD(map, column, row);
+//                        } else {
+//                            int column = Integer.parseInt(readMessage.substring(8, 10));
+//                            pgv.setNumColumns(column);
+//                            pgv.setNumRows(row);
+//                            String map = readMessage.substring(18);
+//
+//                            pgv.mapInStringAMD(map, column, row);
+//                        }
+//                    }
                     //modify add per line
                     if (readMessage.contains("forward")) {
                         tvStatus.setText("Robot Moving Forward");
