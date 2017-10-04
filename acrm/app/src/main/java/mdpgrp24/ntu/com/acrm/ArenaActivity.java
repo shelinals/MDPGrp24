@@ -267,22 +267,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Log.d(TAG, readMessage);
 
-                    //old version
-//                    if (readMessage.contains("GRID=")) {
-//                        String colRow = readMessage.substring(readMessage.indexOf("=")+1, readMessage.indexOf("|"));
-//                        //System.out.println("colrow " +colRow);
-//                        //System.out.println("row " + colRow.substring(colRow.indexOf("?"), colRow.length()));
-//                        int col = Integer.parseInt(colRow.substring(0, colRow.indexOf("?")));
-//                        int row = Integer.parseInt(colRow.substring(colRow.indexOf("?")+1, colRow.length()));
-//
-//                        String direction = readMessage.substring(readMessage.indexOf("|")+1, readMessage.lastIndexOf("|"));
-//
-//                        String map = readMessage.substring(readMessage.lastIndexOf("|")+1, readMessage.length());
-//                        System.out.println("map = " + map);
-//
-//                        pgv.mapInString(map, col, row, direction);
-//                    }
-
                     //for robot
                     if(readMessage.contains("robotPosition")){
                         System.out.println("contains position!!");
@@ -322,12 +306,17 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
                     if(readMessage.contains("MapString")){
                         System.out.println("contains MDF!!");
-                        tvStatus.setText("MDF Available");
+                        tvStatus.setText("Exploration Done");
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
                             jString1 = jObject.getString("MapString1");
                             jString2 = jObject.getString("MapString2");
                             System.out.println("received: "+jString1+" and "+jString2);
+                            timerHandler.removeCallbacks(timerRunnable);
+                            btnStart.setEnabled(true);
+                            btnStart.setVisibility(View.VISIBLE);
+                            btnStop.setEnabled(false);
+                            btnStop.setVisibility(View.INVISIBLE);
 
                         }catch(JSONException e){
                             Log.e("JSON Parser", "Error parsing data grid" + e.toString());
@@ -490,13 +479,11 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     public void onBtnStartPressed(View view) {
         //robot
-//        sendMessage("pstart:e");
-        //amd
         if(exploration){
-            sendMessage("beginExplore");
+            sendMessage("E");
         }
         else {
-            sendMessage("beginFastest");
+            sendMessage("F");
         }
         startTime1 = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
@@ -507,9 +494,9 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnStopPressed(View view) {
-        timerHandler.removeCallbacks(timerRunnable);
         //robot
 //        sendMessage("pstop");
+        timerHandler.removeCallbacks(timerRunnable);
         btnStart.setEnabled(true);
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setEnabled(false);
