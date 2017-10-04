@@ -12,13 +12,20 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -42,6 +49,9 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private static final boolean D = true;
     //private String xposText;
     private Button possend;
+
+    private String jString1 = "Testign 1";
+    private String jString2 = "Testing 2";
 
 
     // Message types sent from the BluetoothChatService Handler
@@ -74,7 +84,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     //FunctionPreference functionPref;
     TextView tvStatus;
-    TextView tvMDF;
+    Button btnMDF;
     TextView tvTimer;
     Button btnStart;
     Button btnStop; //Stop button
@@ -82,6 +92,10 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     ToggleButton togglebtnUpdate;
     ToggleButton togglebtnMode;
     Button btnUpdate;
+    Button btnCalibrate;
+
+    private RelativeLayout mRelativeLayout;
+    private PopupWindow mPopUpWindow;
 
     //CAN BE CHANGED
     long startTime1 = 0;
@@ -166,7 +180,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
         pgv = (PixelGridView) findViewById(R.id.pixelGridView);
 
-        tvMDF = (TextView) findViewById(R.id.tv_mdf_content);
+        btnMDF = (Button) findViewById(R.id.btn_mdf);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.rl_arena);
         tvStatus = (TextView) findViewById(R.id.tv_status_text_box);
         tvStatus.setMovementMethod(new ScrollingMovementMethod());
 
@@ -179,6 +194,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         togglebtnMode = (ToggleButton) findViewById(R.id.togglebtn_mode);
 
         btnUpdate = (Button) findViewById(R.id.btn_update);
+        btnCalibrate = (Button) findViewById(R.id.btn_calibrate);
 
         //functionPref = new FunctionPreference(getApplicationContext());
         btnStop.setEnabled(false);
@@ -193,106 +209,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         		//mapHandler.postDelayed(this, 30000);
         	}
         });
+
     }
-
-
-   /* protected void onDraw(Canvas canvas) {
-        //super.onDraw(canvas);
-        System.out.println("Bye");
-        canvas.save();
-        canvas.scale(scale, scale);
-        pgv.onDraw(canvas);
-        canvas.restore();
-    }*/
-
-    /*@Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        SGD.onTouchEvent(ev);
-        return true;
-    }
-
-    private class ScaleListener extends ScaleGestureDetector.
-            SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            System.out.println("Hi");
-            scale *= detector.getScaleFactor();
-            scale = Math.max(0.1f, Math.min(scale, 5.0f));
-           // matrix.setScale(scale, scale);
-            //img.setImageMatrix(matrix);
-
-            pgv.onDraw();
-            return true;
-        }
-    }*/
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if(D) Log.e(TAG, "++ ON START ++");
-//
-//        // If BT is not on, request that it be enabled.
-//        // setupChat() will then be called during onActivityResult
-//        if (!mBluetoothAdapter.isEnabled()) {
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-//            // Otherwise, setup the chat session
-//        } else {
-//            if (mChatService == null) //setupChat();
-//            {
-//                mChatService = new BluetoothChatService(this, mHandler);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public synchronized void onResume() {
-//        super.onResume();
-//
-//        if(D) Log.e(TAG, "+ ON RESUME +");
-//
-//        // Performing this check in onResume() covers the case in which BT was
-//        // not enabled during onStart(), so we were paused to enable it...
-//        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-//        if (mChatService != null) {
-//            // Only if the state is STATE_NONE, do we know that we haven't started already
-//            if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
-//                // Start the Bluetooth chat services
-//                mChatService.start();
-//            }
-//        }
-//
-//        if (BC.getBluetoothConnectedThread() != null) {
-//            //mHandler = BC.getHandler();
-//            mChatService = BC.getBluetoothConnectedThread();
-//            //mHandler = BC.getHandler();
-//            mChatService.setHandler(mHandler);
-//            mHandler = BC.getHandler();
-//        }
-//
-//        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-//    }
-
-//	    @Override
-//	    public synchronized void onPause() {
-//	        super.onPause();
-//	        if(D) Log.e(TAG, "- ON PAUSE -");
-//	    }
-
-//	    @Override
-//	    public void onStop() {
-//	        super.onStop();
-//	        if(D) Log.e(TAG, "-- ON STOP --");
-//	    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        // Stop the Bluetooth chat services
-//        if (mChatService != null) mChatService.stop();
-//
-//        if(D) Log.e(TAG, "--- ON DESTROY ---");
-//    }
 
     public static ArenaActivity getInstance(){
         return arena;
@@ -345,27 +263,76 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    tvStatus.setText(readMessage);
                     Log.d(TAG, readMessage);
 
+                    //old version
+//                    if (readMessage.contains("GRID=")) {
+//                        String colRow = readMessage.substring(readMessage.indexOf("=")+1, readMessage.indexOf("|"));
+//                        //System.out.println("colrow " +colRow);
+//                        //System.out.println("row " + colRow.substring(colRow.indexOf("?"), colRow.length()));
+//                        int col = Integer.parseInt(colRow.substring(0, colRow.indexOf("?")));
+//                        int row = Integer.parseInt(colRow.substring(colRow.indexOf("?")+1, colRow.length()));
+//
+//                        String direction = readMessage.substring(readMessage.indexOf("|")+1, readMessage.lastIndexOf("|"));
+//
+//                        String map = readMessage.substring(readMessage.lastIndexOf("|")+1, readMessage.length());
+//                        System.out.println("map = " + map);
+//
+//                        pgv.mapInString(map, col, row, direction);
+//                    }
+
                     //for robot
-                    if (readMessage.contains("GRID=")) {
-                        String colRow = readMessage.substring(readMessage.indexOf("=")+1, readMessage.indexOf("|"));
-                        //System.out.println("colrow " +colRow);
-                        //System.out.println("row " + colRow.substring(colRow.indexOf("?"), colRow.length()));
-                        int col = Integer.parseInt(colRow.substring(0, colRow.indexOf("?")));
-                        int row = Integer.parseInt(colRow.substring(colRow.indexOf("?")+1, colRow.length()));
+                    if(readMessage.contains("robotPosition")){
+                        System.out.println("contains position!!");
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            JSONArray jArray = jObject.getJSONArray("robotPosition");
+                            System.out.println(jArray);
+                            pgv.robotPosition(jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data" + e.toString());
+                        }
+                   }
 
-                        String direction = readMessage.substring(readMessage.indexOf("|")+1, readMessage.lastIndexOf("|"));
+                    if(readMessage.contains("Explore")){
+                        System.out.println("contains exploration!!");
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            String jString = jObject.getString("Explore");
+                            System.out.println("contains Explore jString!!"+jString);
+                            pgv.mapExploration(jString);
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data exploration" + e.toString());
+                        }
+                    }
 
-                        String map = readMessage.substring(readMessage.lastIndexOf("|")+1, readMessage.length());
-                        System.out.println("map = " + map);
+                    if(readMessage.contains("Grid")){
+                        System.out.println("contains Grid!!");
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            String jString = jObject.getString("Grid");
+                            System.out.println("contains Grid jString!!"+jString);
+                            pgv.mapObstacle(jString);
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
+                        }
+                    }
 
-                        pgv.mapInString(map, col, row, direction);
+                    if(readMessage.contains("MapString")){
+                        System.out.println("contains MDF!!");
+                        tvStatus.setText("MDF Available");
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            jString1 = jObject.getString("MapString1");
+                            jString2 = jObject.getString("MapString1");
+
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
+                        }
                     }
 
                     //amd
-                    if(readMessage.contains("grid")){
+                    if(readMessage.contains("Testing")){
                         System.out.println("contains grid!!");
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
@@ -379,45 +346,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         }
                     }
 
-//                    if(readMessage.contains("GRID 5")) {
-//                        int row = Integer.parseInt(readMessage.substring(readMessage.indexOf("5"), readMessage.indexOf("5")+1));
-//
-//                        if(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3).equals("5")) {
-//                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+3));
-//                            pgv.setNumColumns(column);
-//                            pgv.setNumRows(row);
-//
-//                            String map = readMessage.substring(readMessage.indexOf("5")+12, readMessage.length());
-//                            pgv.mapInStringAMD(map, column, row);
-//                        } else {
-//                            int column = Integer.parseInt(readMessage.substring(readMessage.indexOf("5")+2, readMessage.indexOf("5")+4));
-//                            pgv.setNumColumns(column);
-//                            pgv.setNumRows(row);
-//                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
-//                            pgv.mapInStringAMD(map, column, row);
-//                        }
-//                    } else if (readMessage.contains("GRID 10") ||
-//                            readMessage.contains("GRID 15") ||
-//                            readMessage.contains("GRID 20") ||
-//                            readMessage.contains("GRID 25") ||
-//                            readMessage.contains("GRID 30")) {
-//                        int row = Integer.parseInt(readMessage.substring(5, 7));
-//
-//                        if(readMessage.substring(8,9).equals("5")) {
-//                            int column = Integer.parseInt(readMessage.substring(8,9));
-//                            pgv.setNumColumns(column);
-//                            pgv.setNumRows(row);
-//                            String map = readMessage.substring(readMessage.indexOf("5")+13, readMessage.length());
-//                            pgv.mapInStringAMD(map, column, row);
-//                        } else {
-//                            int column = Integer.parseInt(readMessage.substring(8, 10));
-//                            pgv.setNumColumns(column);
-//                            pgv.setNumRows(row);
-//                            String map = readMessage.substring(18);
-//
-//                            pgv.mapInStringAMD(map, column, row);
-//                        }
-//                    }
                     //modify add per line
                     if (readMessage.contains("forward")) {
                         tvStatus.setText("Robot Moving Forward");
@@ -445,55 +373,9 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     };
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if(D) Log.d(TAG, "onActivityResult " + resultCode);
-//        switch (requestCode) {
-//            case REQUEST_CONNECT_DEVICE_SECURE:
-//                // When DeviceListActivity returns with a device to connect
-//                if (resultCode == Activity.RESULT_OK) {
-//                    connectDevice(data, true);
-//                }
-//                break;
-//            case REQUEST_CONNECT_DEVICE_INSECURE:
-//                // When DeviceListActivity returns with a device to connect
-//                if (resultCode == Activity.RESULT_OK) {
-//                    connectDevice(data, false);
-//                }
-//                break;
-//            case REQUEST_ENABLE_BT:
-//                // When the request to enable Bluetooth returns
-//                if (resultCode == Activity.RESULT_OK) {
-//                    // Bluetooth is now enabled, so set up a chat session
-//                    //setupChat();
-//                    mChatService = new BluetoothChatService(this, mHandler);
-//                } else {
-//                    // User did not enable Bluetooth or an error occurred
-//                    Log.d(TAG, "BT not enabled");
-//                    Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
-//                    finish();
-//                }
-//        }
-//    }
-
-//    private void connectDevice(Intent data, boolean secure) {
-//        // Get the device MAC address
-//        String address = data.getExtras()
-//                .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-//        // Get the BluetoothDevice object
-//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-//        // Attempt to connect to the device
-//        mChatService.connect(device, secure);
-//
-//
-//        System.out.println("BLUETOOTHCONNECT " + BC);
-//        if (BC.getBluetoothConnectedThread() == null) {
-//            BC.setBluetoothConnectedThread(mChatService, mHandler);
-//
-//            System.out.println("BLUETOOTHCONNECT " + "entered ");
-//        } else {
-//            System.out.println("BLUETOOTHCONNECT " + "problem");
-//        }
-//    }
+    public void onBtnCalibrate(View view){
+        sendMessage("CALIBRATE");
+    }
 
     //Set the Robot Start Coordinate
     public void onBtnRobotStart(View view)
@@ -532,10 +414,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onBtnLeftPressed(View view) {
         if(startpoint!=null) {
             pgv.moveLeft();
-            //actual robot
-            //sendMessage("a2");
-            //AMD test
-            //sendMessage("a");
             final Toast toast = Toast.makeText(this, "Going Left", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -552,10 +430,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onBtnForwardPressed(View view) {
         if(startpoint!=null) {
             pgv.moveForward();
-            //actual robot
-            //sendMessage("a1");
-            //AMD test
-            //sendMessage("w");
             final Toast toast = Toast.makeText(this, "Moving Forward", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -572,10 +446,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onBtnRightPressed(View view) {
         if(startpoint!=null) {
             pgv.moveRight();
-            //actual robot
-            //sendMessage("a3");
-            //AMD test
-            //sendMessage("d");
             final Toast toast = Toast.makeText(this, "Going Right", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -593,10 +463,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onBtnDownPressed(View view) {
         if(startpoint!=null) {
             pgv.moveDown();
-            //actual robot
-            //sendMessage("a4");
-            //AMD test
-            //sendMessage("s");
             final Toast toast = Toast.makeText(this, "Moving Back", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -636,6 +502,49 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setEnabled(false);
         btnStop.setVisibility(View.INVISIBLE);
+    }
+
+    public void onBtnMDFShow(View view){
+        // Initialize a new instance of LayoutInflater service
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        // Inflate the custom layout/view
+        View customView = inflater.inflate(R.layout.popup_mdf,null);
+
+        // Initialize a new instance of popup window
+        mPopUpWindow = new PopupWindow(
+                customView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+        );
+
+        // Set an elevation value for popup window
+        // Call requires API level 21
+        if(Build.VERSION.SDK_INT>=21){
+            mPopUpWindow.setElevation(5.0f);
+        }
+
+        // Get a reference for the custom view close button
+        ImageButton closeButton = (ImageButton) customView.findViewById(R.id.btn_close);
+
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopUpWindow.dismiss();
+            }
+        });
+
+        // Finally, show the popup window at the center location of root relative layout
+        mPopUpWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+//        Intent intent = new Intent(getApplicationContext(), MDFActivity.class);
+//        Bundle extras = new Bundle();
+//        extras.putString("JSTRING1",jString1);
+//        extras.putString("JSTRING2",jString2);
+//        intent.putExtras(extras);
+//        startActivity(intent);
     }
 
     public void onBtnResetPressed(View view) {

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/rl_arena">
 
     <TextView
         android:id="@+id/tv_exploration_time"
@@ -185,35 +186,23 @@
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_below="@id/tv_status"
-        android:layout_marginTop="5dp"
         android:layout_alignStart="@id/tv_exploration_time"
         android:text="@string/test"
         android:textSize="35dp"
-        android:maxLines="2"
+        android:maxLines="1"
         android:scrollbars="vertical"
         android:background="@drawable/back"/>
 
-    <TextView
-        android:id="@+id/tv_mdf"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_mdf"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_alignStart="@+id/tv_exploration_time"
-        android:layout_below="@+id/tv_status_text_box"
-        android:textSize="20dp"
-        android:text="@string/mdf" />
-
-    <TextView
-        android:id="@+id/tv_mdf_content"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_below="@id/tv_mdf"
-        android:layout_marginTop="5dp"
+        android:layout_below="@id/tv_status_text_box"
         android:layout_alignStart="@id/tv_exploration_time"
-        android:textSize="40dp"
-        android:maxLines="3"
-        android:scrollbars="vertical"
-        android:background="@drawable/back"/>
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:text="See MDF"
+        android:onClick="onBtnMDFShow"/>
 
     <Button
         android:id="@+id/btn_up"
@@ -255,5 +244,15 @@
         android:layout_marginTop="45dp"
         android:layout_below="@+id/btn_up"
         android:layout_alignStart="@+id/btn_up" />
+
+    <Button
+        android:id="@+id/btn_calibrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="Calibrate"
+        android:onClick="onBtnCalibrate"
+        android:layout_below="@+id/togglebtn_mode"
+        android:layout_alignEnd="@+id/robot_start" />
 
 </RelativeLayout>
