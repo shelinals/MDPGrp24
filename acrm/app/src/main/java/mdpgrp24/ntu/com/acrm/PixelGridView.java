@@ -461,7 +461,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 270) {
-            ArenaActivity.getInstance().sendMessage("AU:180");
+            ArenaActivity.getInstance().sendMessage("AP:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -556,7 +556,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 90) {
-            ArenaActivity.getInstance().sendMessage("AU:180");
+            ArenaActivity.getInstance().sendMessage("AP:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -653,7 +653,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 180){
-            ArenaActivity.getInstance().sendMessage("AU:180");
+            ArenaActivity.getInstance().sendMessage("AP:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -747,7 +747,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 0) {
-            ArenaActivity.getInstance().sendMessage("AU:180");
+            ArenaActivity.getInstance().sendMessage("AP:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
