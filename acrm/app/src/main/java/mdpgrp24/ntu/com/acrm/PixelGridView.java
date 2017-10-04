@@ -242,7 +242,7 @@ public class PixelGridView extends View {
                                         setEnabledPGV(false);
                                         //ArenaActivity.getInstance().sendMessage("startpoint coordinate ("+column+","+row+")");
                                         //robot
-                                        ArenaActivity.getInstance().sendMessage("sp:"+row+":"+column);
+                                        ArenaActivity.getInstance().sendMessage("Psp:"+row+":"+column+":0");
                                         System.out.println("Startpoint received! " + point);
                                         currentAngle = 0;
                                         setCoordinates(row,column);
@@ -252,7 +252,7 @@ public class PixelGridView extends View {
                                         setEnabledPGV(false);
                                         //ArenaActivity.getInstance().sendMessage("waypoint coordinate ("+column+","+row+")");
                                         //robot
-                                        ArenaActivity.getInstance().sendMessage("wp"+row+":"+column);
+                                        ArenaActivity.getInstance().sendMessage("Pwp:"+row+":"+column);
                                         System.out.println("Waypoint received! " + point);
                                         setCoordinates(row,column);
                                     }
@@ -379,7 +379,7 @@ public class PixelGridView extends View {
         int columnFront = -1;
         int rowFront = -1;
         if (currentAngle == 90) {
-            ArenaActivity.getInstance().sendMessage("F");
+            ArenaActivity.getInstance().sendMessage("AF:1");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -423,7 +423,7 @@ public class PixelGridView extends View {
 //    			}
 //    		}
         } else if (currentAngle == 0) {
-            ArenaActivity.getInstance().sendMessage("R");
+            ArenaActivity.getInstance().sendMessage("AR:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -442,7 +442,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 180) {
-            ArenaActivity.getInstance().sendMessage("L");
+            ArenaActivity.getInstance().sendMessage("AL:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -461,7 +461,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 270) {
-            ArenaActivity.getInstance().sendMessage("U");
+            ArenaActivity.getInstance().sendMessage("AU:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -484,7 +484,7 @@ public class PixelGridView extends View {
         int columnFront = -1;
         int rowFront = -1;
         if (currentAngle == 270) {
-            ArenaActivity.getInstance().sendMessage("F");
+            ArenaActivity.getInstance().sendMessage("AF:1");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -517,7 +517,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 0) {
-            ArenaActivity.getInstance().sendMessage("L");
+            ArenaActivity.getInstance().sendMessage("AL:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -537,7 +537,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 180) {
-            ArenaActivity.getInstance().sendMessage("R");
+            ArenaActivity.getInstance().sendMessage("AR:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -556,7 +556,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 90) {
-            ArenaActivity.getInstance().sendMessage("U");
+            ArenaActivity.getInstance().sendMessage("AU:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -582,7 +582,7 @@ public class PixelGridView extends View {
         int columnFront = -1;
         int rowFront = -1;
         if (currentAngle == 90) {
-            ArenaActivity.getInstance().sendMessage("L");
+            ArenaActivity.getInstance().sendMessage("AL:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -601,7 +601,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 0) {
-            ArenaActivity.getInstance().sendMessage("F");
+            ArenaActivity.getInstance().sendMessage("AF:1");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -634,7 +634,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 270) {
-            ArenaActivity.getInstance().sendMessage("R");
+            ArenaActivity.getInstance().sendMessage("AR:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -653,7 +653,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 180){
-            ArenaActivity.getInstance().sendMessage("U");
+            ArenaActivity.getInstance().sendMessage("AU:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -676,7 +676,7 @@ public class PixelGridView extends View {
         int columnFront = -1;
         int rowFront = -1;
         if (currentAngle == 90) {
-            ArenaActivity.getInstance().sendMessage("R");
+            ArenaActivity.getInstance().sendMessage("AR:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -695,7 +695,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 180) {
-            ArenaActivity.getInstance().sendMessage("F");
+            ArenaActivity.getInstance().sendMessage("AF:1");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -728,7 +728,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 270) {
-            ArenaActivity.getInstance().sendMessage("L");
+            ArenaActivity.getInstance().sendMessage("AL:90");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -747,7 +747,7 @@ public class PixelGridView extends View {
                 }
             }
         } else if (currentAngle == 0) {
-            ArenaActivity.getInstance().sendMessage("U");
+            ArenaActivity.getInstance().sendMessage("AU:180");
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numColumns; j++) {
                     if (cellFront[i][j]) {
@@ -771,8 +771,8 @@ public class PixelGridView extends View {
         invalidate();
     }
 
-    public void robotPosition(int column, int row, String direction){
-        ArenaActivity.getInstance().sendMessage("ACKrobotPos");
+    public void robotPosition(int row, int column, String direction){
+        ArenaActivity.getInstance().sendMessage("PACKrobotPos");
         if (direction.equalsIgnoreCase("0")) {
             currentAngle = 0;
         } else if (direction.equalsIgnoreCase("90")) {
@@ -796,7 +796,7 @@ public class PixelGridView extends View {
     }
 
     public void mapExploration(String mapExplore){
-        ArenaActivity.getInstance().sendMessage("ACKmapExp");
+        ArenaActivity.getInstance().sendMessage("PACKmapExp");
         String mapExpFilter = mapExplore.replaceAll(" ", "");
         String mapExpBinary = hex2binary(mapExpFilter);
 
@@ -816,7 +816,7 @@ public class PixelGridView extends View {
     }
 
     public void mapObstacle(String mapGrid) {
-        ArenaActivity.getInstance().sendMessage("ACKmapGrid");
+        ArenaActivity.getInstance().sendMessage("PACKmapGrid");
         String mapGridFilter = mapGrid.replaceAll(" ", "");
         String mapGridBinary = hex2binary(mapGridFilter);
 

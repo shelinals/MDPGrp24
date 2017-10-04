@@ -37,11 +37,6 @@ import org.w3c.dom.Text;
 
 public class ArenaActivity extends Activity implements SensorEventListener {
 
-    //MISSING IMPLEMENTATION
-    //EXIT ARENA - check
-    //STOPPING
-    //ENABLE WAYPOINT AND ROBOTSTART CLICK - check
-    //Sensor?
 
     static ArenaActivity arena;
 
@@ -308,19 +303,20 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         System.out.println("contains MDF!!");
                         tvStatus.setText("Exploration Done");
                         try {
+                            sendAckMDF();
                             JSONObject jObject = new JSONObject(readMessage);
                             jString1 = jObject.getString("MapString1");
                             jString2 = jObject.getString("MapString2");
-                            System.out.println("received: "+jString1+" and "+jString2);
-                            timerHandler.removeCallbacks(timerRunnable);
-                            btnStart.setEnabled(true);
-                            btnStart.setVisibility(View.VISIBLE);
-                            btnStop.setEnabled(false);
-                            btnStop.setVisibility(View.INVISIBLE);
+                            doWhenReceivedMDF(jString1,jString2);
 
                         }catch(JSONException e){
                             Log.e("JSON Parser", "Error parsing data grid" + e.toString());
                         }
+                    }
+
+                    if(readMessage.contains("FINISHED")){
+                        tvStatus.setText("Fastest WP Done");
+                        doWhenFinishFWP();
                     }
 
                     //amd
@@ -348,16 +344,16 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         }
                     }
                     //modify add per line
-                    if (readMessage.contains("forward")) {
+                    if (readMessage.contains("FORWARD")) {
                         tvStatus.setText("Robot Moving Forward");
-                    } else if (readMessage.contains("stop")) {
+                    } else if (readMessage.contains("HOLD")) {
                         tvStatus.setText("Robot Stop");
-                    }else if(readMessage.contains("back")){
-                        tvStatus.setText("Robot Moving Back");
-                    } else if (readMessage.contains("left")) {
-                        tvStatus.setText("Robot Going Left");
-                    } else if (readMessage.contains("right")) {
-                        tvStatus.setText("Robot Going Right");
+                    }else if(readMessage.contains("UTURN")){
+                        tvStatus.setText("Robot Making U-turn");
+                    } else if (readMessage.contains("LEFT")) {
+                        tvStatus.setText("Robot Turning Left");
+                    } else if (readMessage.contains("RIGHT")) {
+                        tvStatus.setText("Robot Turning Right");
                     }
                     break;
                 case MESSAGE_DEVICE_NAME:
@@ -374,8 +370,30 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     };
 
+    public void doWhenReceivedMDF(String j1, String j2){
+        jString1 = j1;
+        jString2 = j2;
+        timerHandler.removeCallbacks(timerRunnable);
+        btnStart.setEnabled(true);
+        btnStart.setVisibility(View.VISIBLE);
+        btnStop.setEnabled(false);
+        btnStop.setVisibility(View.INVISIBLE);
+    }
+
+    public void doWhenFinishFWP(){
+        timerHandler.removeCallbacks(timerRunnable);
+        btnStart.setEnabled(true);
+        btnStart.setVisibility(View.VISIBLE);
+        btnStop.setEnabled(false);
+        btnStop.setVisibility(View.INVISIBLE);
+    }
+
+    public void sendAckMDF(){
+        sendMessage("PACKMDF");
+    }
+
     public void onBtnCalibrate(View view){
-        sendMessage("CALIBRATE");
+        //sendMessage("CALIBRATE");
     }
 
     //Set the Robot Start Coordinate
@@ -480,10 +498,10 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onBtnStartPressed(View view) {
         //robot
         if(exploration){
-            sendMessage("E");
+            sendMessage("PE");
         }
         else {
-            sendMessage("F");
+            sendMessage("PF");
         }
         startTime1 = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
@@ -552,13 +570,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
             // Finally, show the popup window at the center location of root relative layout
             mPopUpWindow.showAtLocation(mRelativeLayout, Gravity.CENTER, 0, 0);
         }
-
-//        Intent intent = new Intent(getApplicationContext(), MDFActivity.class);
-//        Bundle extras = new Bundle();
-//        extras.putString("JSTRING1",jString1);
-//        extras.putString("JSTRING2",jString2);
-//        intent.putExtras(extras);
-//        startActivity(intent);
     }
 
     public void onBtnResetPressed(View view) {
@@ -594,7 +605,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnUpdatePressed(View view) {
-        sendMessage("GRID");
+        sendMessage("PGRID");
         //request map from rpi/pc
     }
 
@@ -656,6 +667,32 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
 
         flag2 = true;
+    }
+
+    public static String hex2binary(String hex) {
+        StringBuilder result = new StringBuilder(hex.length() * 4);
+        for (char c : hex.toUpperCase().toCharArray()) {
+            switch (c) {
+                case '0': result.append("0000"); break;
+                case '1': result.append("0001"); break;
+                case '2': result.append("0010"); break;
+                case '3': result.append("0011"); break;
+                case '4': result.append("0100"); break;
+                case '5': result.append("0101"); break;
+                case '6': result.append("0110"); break;
+                case '7': result.append("0111"); break;
+                case '8': result.append("1000"); break;
+                case '9': result.append("1001"); break;
+                case 'A': result.append("1010"); break;
+                case 'B': result.append("1011"); break;
+                case 'C': result.append("1100"); break;
+                case 'D': result.append("1101"); break;
+                case 'E': result.append("1110"); break;
+                case 'F': result.append("1111"); break;
+                default: throw new IllegalArgumentException("Invalid hex: '" + hex + "'");
+            }
+        }
+        return result.toString();
     }
 
     @Override
