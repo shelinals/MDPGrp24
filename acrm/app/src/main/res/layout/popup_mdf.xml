@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="2dp"
+    android:background="#FFFFFF"
     >
+
     <ImageButton
         android:id="@+id/btn_close"
         android:layout_width="wrap_content"
@@ -19,12 +21,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mdf_string_partone"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:text="Testing1"
+        android:textColor="#000000" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mdf_string_parttwo"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@id/mdf_string_partone"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:text="Testing2"
+        android:textColor="#000000" />
 
 </RelativeLayout>

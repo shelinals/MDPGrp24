@@ -188,7 +188,7 @@
         android:layout_below="@id/tv_status"
         android:layout_alignStart="@id/tv_exploration_time"
         android:text="@string/test"
-        android:textSize="35dp"
+        android:textSize="25dp"
         android:maxLines="1"
         android:scrollbars="vertical"
         android:background="@drawable/back"/>

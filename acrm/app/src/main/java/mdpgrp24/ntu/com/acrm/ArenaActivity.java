@@ -33,6 +33,7 @@ import android.widget.ToggleButton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class ArenaActivity extends Activity implements SensorEventListener {
 
@@ -50,8 +51,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     //private String xposText;
     private Button possend;
 
-    private String jString1 = "Testign 1";
-    private String jString2 = "Testing 2";
+    private String jString1;
+    private String jString2;
 
 
     // Message types sent from the BluetoothChatService Handler
@@ -96,6 +97,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     private RelativeLayout mRelativeLayout;
     private PopupWindow mPopUpWindow;
+    private boolean isPopOut = false;
 
     //CAN BE CHANGED
     long startTime1 = 0;
@@ -324,7 +326,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
                             jString1 = jObject.getString("MapString1");
-                            jString2 = jObject.getString("MapString1");
+                            jString2 = jObject.getString("MapString2");
+                            System.out.println("received: "+jString1+" and "+jString2);
 
                         }catch(JSONException e){
                             Log.e("JSON Parser", "Error parsing data grid" + e.toString());
@@ -346,6 +349,15 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         }
                     }
 
+                    if(readMessage.contains("status")){
+                        try {
+                            JSONObject jObject = new JSONObject(readMessage);
+                            String jString = jObject.getString("status");
+                            tvStatus.setText(jString);
+                        }catch(JSONException e){
+                            Log.e("JSON Parser", "Error parsing data" + e.toString());
+                        }
+                    }
                     //modify add per line
                     if (readMessage.contains("forward")) {
                         tvStatus.setText("Robot Moving Forward");
@@ -505,39 +517,54 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnMDFShow(View view){
-        // Initialize a new instance of LayoutInflater service
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        // Inflate the custom layout/view
-        View customView = inflater.inflate(R.layout.popup_mdf,null);
+        if(isPopOut==false) {
 
-        // Initialize a new instance of popup window
-        mPopUpWindow = new PopupWindow(
-                customView,
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
-        );
+            // Initialize a new instance of LayoutInflater service
+            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        // Set an elevation value for popup window
-        // Call requires API level 21
-        if(Build.VERSION.SDK_INT>=21){
-            mPopUpWindow.setElevation(5.0f);
-        }
+            // Inflate the custom layout/view
+            View customView = inflater.inflate(R.layout.popup_mdf, null);
 
-        // Get a reference for the custom view close button
-        ImageButton closeButton = (ImageButton) customView.findViewById(R.id.btn_close);
+            // Initialize a new instance of popup window
+            mPopUpWindow = new PopupWindow(
+                    customView,
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT
+            );
 
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopUpWindow.dismiss();
+            isPopOut = true;
+
+            // Set an elevation value for popup window
+            // Call requires API level 21
+            if (Build.VERSION.SDK_INT >= 21) {
+                mPopUpWindow.setElevation(5.0f);
             }
-        });
 
-        // Finally, show the popup window at the center location of root relative layout
-        mPopUpWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+            // Get a reference for the custom view close button
+            ImageButton closeButton = (ImageButton) customView.findViewById(R.id.btn_close);
+            TextView textview1 = (TextView) customView.findViewById(R.id.mdf_string_partone);
+            TextView textview2 = (TextView) customView.findViewById(R.id.mdf_string_parttwo);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.BELOW, textview1.getId());
+
+            System.out.println("inside popup:"+jString1+" and "+jString2);
+            textview1.setText(jString1);
+            textview2.setText(jString2);
+
+            // Set a click listener for the popup window close button
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Dismiss the popup window
+                    isPopOut = false;
+                    mPopUpWindow.dismiss();
+                }
+            });
+
+            // Finally, show the popup window at the center location of root relative layout
+            mPopUpWindow.showAtLocation(mRelativeLayout, Gravity.CENTER, 0, 0);
+        }
 
 //        Intent intent = new Intent(getApplicationContext(), MDFActivity.class);
 //        Bundle extras = new Bundle();
