@@ -117,7 +117,7 @@ public class PixelGridView extends View {
         calculateDimensions(coor1,coor2);
 
         //testing
-        System.out.println(coor2 + "-" + coor1);
+        //System.out.println(coor2 + "-" + coor1);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class PixelGridView extends View {
             else if(type == "waypoint"){
                 cellType[x][y] = 2;
                 cellWaypoint[x][y] = true;
-                System.out.println("waypoint at: "+x+","+y);
+                //System.out.println("waypoint at: "+x+","+y);
             }
 
             invalidate();
@@ -210,14 +210,14 @@ public class PixelGridView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         //SGD.onTouchEvent(ev);
         if (enableClick == false) {
-            System.out.println("TOUCH Check hereeee WRONG");
+            //System.out.println("TOUCH Check hereeee WRONG");
             return false;
         } else {
             int touchX = (int) event.getX();
             int touchY = (int) event.getY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    System.out.println("Touching down!");
+                    //System.out.println("Touching down!");
                     for (Rect rect : rectangles) {
                         if (rect.contains(touchX, touchY)) {
                             int index = rectangles.indexOf(rect);
@@ -386,8 +386,8 @@ public class PixelGridView extends View {
                         cellChecked[i][j]=true;
                         rowFront = i;
                         columnFront = j;
-                        System.out.println(i);
-                        System.out.println(j);
+                        //System.out.println(i);
+                        //System.out.println(j);
 
                     }
                 }
@@ -773,6 +773,7 @@ public class PixelGridView extends View {
 
     public void robotPosition(int row, int column, String direction){
         ArenaActivity.getInstance().sendMessage("PACKrobotPos");
+        System.out.println("sending ACK robot POS");
         if (direction.equalsIgnoreCase("0")) {
             currentAngle = 0;
         } else if (direction.equalsIgnoreCase("90")) {
@@ -797,6 +798,7 @@ public class PixelGridView extends View {
 
     public void mapExploration(String mapExplore){
         ArenaActivity.getInstance().sendMessage("PACKmapExp");
+        System.out.println("sending ACK MAP EXP");
         String mapExpFilter = mapExplore.replaceAll(" ", "");
         String mapExpBinary = hex2binary(mapExpFilter);
 
@@ -817,6 +819,7 @@ public class PixelGridView extends View {
 
     public void mapObstacle(String mapGrid) {
         ArenaActivity.getInstance().sendMessage("PACKmapGrid");
+        System.out.println("sending ACK MAP GRID");
         String mapGridFilter = mapGrid.replaceAll(" ", "");
         String mapGridBinary = hex2binary(mapGridFilter);
 
@@ -826,10 +829,10 @@ public class PixelGridView extends View {
                     if(cellWaypoint[i][j] != true || cellType[i][j]!=0 || cellFront[i][j]!=true || cellCenter[i][j] != true || cellRear[i][j]!=true) {
                         if (Integer.parseInt(mapGridBinary.substring(0, 1)) == 1) {
                             cellType[i][j] = 3;
-                            System.out.println("updateobstaclereally: row"+i+"col"+j+"="+cellType[i][j]);
+                            //System.out.println("updateobstaclereally: row"+i+"col"+j+"="+cellType[i][j]);
                         }
                     }
-                    System.out.println("updateobstacle: row"+i+"col"+j+"="+cellType[i][j]);
+                    //System.out.println("updateobstacle: row"+i+"col"+j+"="+cellType[i][j]);
                     mapGridBinary = mapGridBinary.substring(1);
                 }
             }
@@ -860,7 +863,7 @@ public class PixelGridView extends View {
             for (int j = 0; j < numColumns; j++) {
                 if (mapBinary.length() != 0) {
                     cellType[i][j] = Integer.parseInt(mapBinary.substring(0,1));
-                    System.out.println("row"+i+"col"+j+"="+cellType[i][j]);
+                    //System.out.println("row"+i+"col"+j+"="+cellType[i][j]);
                     mapBinary = mapBinary.substring(1);
                 }
             }

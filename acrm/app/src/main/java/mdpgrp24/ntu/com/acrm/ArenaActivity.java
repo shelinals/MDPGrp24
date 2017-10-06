@@ -264,7 +264,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
                     //for robot
                     if(readMessage.contains("robotPosition")){
-                        System.out.println("contains position!!");
+                        System.out.println("receive position!!");
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
                             JSONArray jArray = jObject.getJSONArray("robotPosition");
@@ -276,7 +276,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                    }
 
                     if(readMessage.contains("Explore")){
-                        System.out.println("contains exploration!!");
+                        System.out.println("receive exploration!!");
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
                             String jString = jObject.getString("Explore");
@@ -288,7 +288,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     }
 
                     if(readMessage.contains("Grid")){
-                        System.out.println("contains Grid!!");
+                        System.out.println("receive Grid!!");
                         try {
                             JSONObject jObject = new JSONObject(readMessage);
                             String jString = jObject.getString("Grid");
@@ -300,7 +300,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     }
 
                     if(readMessage.contains("MapString")){
-                        System.out.println("contains MDF!!");
+                        System.out.println("receive MDF!!");
                         tvStatus.setText("Exploration Done");
                         try {
                             sendAckMDF();
@@ -346,14 +346,19 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     //modify add per line
                     if (readMessage.contains("FORWARD")) {
                         tvStatus.setText("Robot Moving Forward");
+                        sendAckRobotStatus();
                     } else if (readMessage.contains("HOLD")) {
                         tvStatus.setText("Robot Stop");
+                        sendAckRobotStatus();
                     }else if(readMessage.contains("UTURN")){
                         tvStatus.setText("Robot Making U-turn");
+                        sendAckRobotStatus();
                     } else if (readMessage.contains("LEFT")) {
                         tvStatus.setText("Robot Turning Left");
+                        sendAckRobotStatus();
                     } else if (readMessage.contains("RIGHT")) {
                         tvStatus.setText("Robot Turning Right");
+                        sendAckRobotStatus();
                     }
                     break;
                 case MESSAGE_DEVICE_NAME:
@@ -386,6 +391,10 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setEnabled(false);
         btnStop.setVisibility(View.INVISIBLE);
+    }
+
+    public void sendAckRobotStatus(){
+        sendMessage("PACKStatus");
     }
 
     public void sendAckMDF(){
