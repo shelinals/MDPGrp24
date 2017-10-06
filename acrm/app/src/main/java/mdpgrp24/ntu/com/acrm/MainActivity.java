@@ -4,17 +4,24 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
+
+public class MainActivity extends Activity  {
 
     // Debugging
     private static final String TAG = "BluetoothChat";
@@ -46,6 +53,12 @@ public class MainActivity extends Activity {
 
     BluetoothConnect BC;
     FunctionPreference functionPref;
+
+    public ListView mList;
+    public Button speakButton;
+
+    public static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+
     //TextView tvTimer2;
 
 
@@ -62,6 +75,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         // img = (ImageView)findViewById(R.id.pixelGridView);
         //SGD = new ScaleGestureDetector(this,new ScaleListener());
+        voiceinputbuttons();
 
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -91,6 +105,19 @@ public class MainActivity extends Activity {
 //        		mapHandler.postDelayed(this, 30000);
 //        	}
 //        });
+    }
+
+    public void voiceinputbuttons(){
+        speakButton = (Button)findViewById(R.id.btn_Next);
+        mList = (ListView)findViewById(R.id.list);
+        mList.setVisibility(View.INVISIBLE);
+    }
+
+    public void startVoiceRecognitionActivity(){
+        Intent intent = new Intent (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Please speak");
+        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 
 
@@ -280,6 +307,15 @@ public class MainActivity extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (D) Log.d(TAG, "onActivityResult " + resultCode);
+        if(requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK){
+            ArrayList matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            mList.setAdapter(new ArrayAdapter(this,android.R.layout.simple_list_item_1,matches));
+
+            if(matches.contains("proceed")){
+                informationMenu();
+            }
+
+        }
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE_SECURE:
                 // When DeviceListActivity returns with a device to connect
@@ -305,6 +341,7 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
                     finish();
                 }
+
         }
     }
 
@@ -348,6 +385,21 @@ public class MainActivity extends Activity {
             startActivity(intent);
         }
 
+    }
+
+    public void onBtnToNextPressed(View view){
+
+        startVoiceRecognitionActivity();
+    }
+
+    public void informationMenu(){
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED){
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Intent i = new Intent(this, ArenaActivity.class);
+            startActivity(i);
+        }
     }
 
     private void sendMessage(String message) {

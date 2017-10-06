@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.RecognizerIntent;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class ArenaActivity extends Activity implements SensorEventListener {
 
@@ -66,6 +69,9 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
 
+    //Voice Recognition purposes
+    public static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+
     // Name of the connected device
     private String mConnectedDeviceName = null;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -89,6 +95,14 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     ToggleButton togglebtnMode;
     Button btnUpdate;
     Button btnCalibrate;
+
+    //Voice Recognition Purposes
+    Button btnLeft;
+    Button btnRight;
+    Button btnForward;
+    Button btnDown;
+    Button btnTalk;
+    ToggleButton togglebtnSpeech;
 
     private RelativeLayout mRelativeLayout;
     private PopupWindow mPopUpWindow;
@@ -192,6 +206,13 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
         btnUpdate = (Button) findViewById(R.id.btn_update);
         btnCalibrate = (Button) findViewById(R.id.btn_calibrate);
+        togglebtnSpeech =(ToggleButton)findViewById(R.id.toggleButtonSwitch);
+        btnLeft = (Button)findViewById(R.id.btn_left);
+        btnRight = (Button)findViewById(R.id.btn_right);
+        btnForward = (Button)findViewById(R.id.btn_up);
+        btnDown = (Button)findViewById(R.id.btn_down);
+        btnTalk = (Button)findViewById(R.id.btn_talk);
+        btnTalk.setEnabled(false);
 
         //functionPref = new FunctionPreference(getApplicationContext());
         btnStop.setEnabled(false);
@@ -207,6 +228,29 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         	}
         });
 
+    }
+
+    public void startVoiceRecognitionActivity(){
+        Intent intent = new Intent (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Please speak");
+        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (D) Log.d(TAG, "onActivityResult " + resultCode);
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+            ArrayList matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            if (matches.contains("left")) {
+                informationLeft();
+            }
+
+            else if (matches.contains("right")){ informationRight();}
+            else if (matches.contains("up")) {informationForward();}
+            else if (matches.contains("down")){informationDown();}
+
+        }
     }
 
     public static ArenaActivity getInstance(){
@@ -438,6 +482,10 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     }
 
+    public void onBtnTalk(View view){
+        startVoiceRecognitionActivity();
+    }
+
 
     public void onBtnLeftPressed(View view) {
         if(startpoint!=null) {
@@ -455,9 +503,51 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     }
 
+    public void informationLeft(){
+        if(startpoint!=null) {
+            pgv.moveLeft();
+            //actual robot
+            //sendMessage("a2");
+            //AMD test
+            //sendMessage("a");
+            final Toast toast = Toast.makeText(this, "Going Left", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+        }
+    }
+
+
+
     public void onBtnForwardPressed(View view) {
         if(startpoint!=null) {
             pgv.moveForward();
+            final Toast toast = Toast.makeText(this, "Moving Forward", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+        }
+    }
+
+    public void informationForward(){
+        if(startpoint!=null) {
+            pgv.moveForward();
+            //actual robot
+            //sendMessage("a1");
+            //AMD test
+            //sendMessage("w");
             final Toast toast = Toast.makeText(this, "Moving Forward", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -487,10 +577,51 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     }
 
+    public void informationRight(){
+        if(startpoint!=null) {
+            pgv.moveRight();
+            //actual robot
+            //sendMessage("a3");
+            //AMD test
+            //sendMessage("d");
+            final Toast toast = Toast.makeText(this, "Going Right", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+        }
+
+    }
+
     //for AMD testing > this is down button
     public void onBtnDownPressed(View view) {
         if(startpoint!=null) {
             pgv.moveDown();
+            final Toast toast = Toast.makeText(this, "Moving Back", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+        }
+    }
+
+    public void informationDown() {
+        if (startpoint != null) {
+            pgv.moveDown();
+            //actual robot
+            //sendMessage("a4");
+            //AMD test
+            //sendMessage("s");
             final Toast toast = Toast.makeText(this, "Moving Back", Toast.LENGTH_SHORT);
             toast.show();
 
@@ -612,6 +743,24 @@ public class ArenaActivity extends Activity implements SensorEventListener {
             ((Button)findViewById(R.id.btn_start)).setText(R.string.exp_btn);
         }
     }
+
+    public void onTogglebtnSpeech(View view) {
+        if(togglebtnSpeech.isChecked()){
+            btnLeft.setEnabled(false);
+            btnRight.setEnabled(false);
+            btnForward.setEnabled(false);
+            btnDown.setEnabled(false);
+            btnTalk.setEnabled(true);
+        }
+        else{
+            btnLeft.setEnabled(true);
+            btnRight.setEnabled(true);
+            btnForward.setEnabled(true);
+            btnDown.setEnabled(true);
+            btnTalk.setEnabled(false);
+        }
+    }
+
 
     public void onBtnUpdatePressed(View view) {
         sendMessage("PGRID");

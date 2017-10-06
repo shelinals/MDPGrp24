@@ -42,9 +42,28 @@
         android:text="@string/arena"
         android:layout_below="@+id/btn_f2"
         android:layout_alignLeft="@+id/btn_f1"
-        android:layout_marginTop="100px"
+        android:layout_marginTop="50px"
         android:layout_alignStart="@+id/btn_f1"
         android:onClick="onBtnToArenaPressed"/>
+    <Button
+        android:id="@+id/btn_Next"
+        android:layout_width="600px"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:layout_below="@+id/btn_Arena"
+        android:layout_alignLeft="@+id/btn_f1"
+        android:layout_marginTop="20px"
+        android:layout_alignStart="@+id/btn_f1"
+        android:onClick="onBtnToNextPressed"/>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_Next"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp" />
 
 
 </RelativeLayout>

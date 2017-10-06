@@ -69,5 +69,9 @@
     <string name="Xpos">Xpos</string>
     <string name="Ypos">Ypos</string>
     <string name="mdf">MDF String</string>
+    <string name="next">Next Activity</string>
+    <string name="manually">Manual</string>
+    <string name="speech">Speech</string>
+
 
 </resources>

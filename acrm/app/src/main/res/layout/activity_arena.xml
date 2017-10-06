@@ -255,4 +255,26 @@
         android:layout_below="@+id/togglebtn_mode"
         android:layout_alignEnd="@+id/robot_start" />
 
+    <ToggleButton
+        android:id="@+id/toggleButtonSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btn_start"
+        android:layout_below="@+id/tv_status_text_box"
+        android:onClick="onTogglebtnSpeech"
+        android:textOff="@string/manually"
+        android:textOn="@string/speech"
+        android:layout_marginStart="23dp"
+        android:text="Speech" />
+
+    <Button
+        android:id="@+id/btn_talk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@+id/toggleButtonSwitch"
+        android:onClick="onBtnTalk"
+        android:text="Talk" />
+
 </RelativeLayout>
