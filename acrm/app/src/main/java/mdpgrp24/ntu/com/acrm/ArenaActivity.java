@@ -115,6 +115,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private Sensor mSensor;
     boolean flag = false;
     boolean flag2 = false;
+    private int minutes;
 
     String startpoint = null;
     String waypoint = null;
@@ -139,10 +140,10 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         public void run() {
             long millis = System.currentTimeMillis() - startTime1;
             int seconds = (int) (millis / 1000.0);
-            //int minutes = seconds / 60;
+            minutes = seconds/60;
             seconds = seconds % 60;
 
-            tvTimer.setText(String.format("%d:%d", ((int)seconds), ((long)millis%100)));
+            tvTimer.setText(String.format("%d:%d:%d", ((int)minutes), ((int)seconds), ((long)millis%100)));
 
             timerHandler.postDelayed(this, 0);
         }
@@ -173,6 +174,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         SetupBTService();
 
         arena = this;
+
+        minutes = 0;
 
         setContentView(R.layout.activity_arena);
         //img = (ImageView)findViewById(R.id.pixelGridView);
@@ -714,6 +717,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     public void onBtnResetPressed(View view) {
         tvTimer.setText(R.string.timer_default);
+        minutes = 0;
     }
 
     public void onTogglebtnUpdatePressed(View view) {
