@@ -772,8 +772,8 @@ public class PixelGridView extends View {
     }
 
     public void robotPosition(int row, int column, String direction){
-        ArenaActivity.getInstance().sendMessage("PACKrobotPos");
-        System.out.println("sending ACK robot POS");
+        //ArenaActivity.getInstance().sendMessage("PACKrobotPos");
+        //System.out.println("sending ACK robot POS");
         if (direction.equalsIgnoreCase("0")) {
             currentAngle = 0;
         } else if (direction.equalsIgnoreCase("90")) {
@@ -797,8 +797,8 @@ public class PixelGridView extends View {
     }
 
     public void mapExploration(String mapExplore){
-        ArenaActivity.getInstance().sendMessage("PACKmapExp");
-        System.out.println("sending ACK MAP EXP");
+        //ArenaActivity.getInstance().sendMessage("PACKmapExp");
+        //System.out.println("sending ACK MAP EXP");
         String mapExpFilter = mapExplore.replaceAll(" ", "");
         String mapExpBinary = hex2binary(mapExpFilter);
 
@@ -818,8 +818,8 @@ public class PixelGridView extends View {
     }
 
     public void mapObstacle(String mapGrid) {
-        ArenaActivity.getInstance().sendMessage("PACKmapGrid");
-        System.out.println("sending ACK MAP GRID");
+        //ArenaActivity.getInstance().sendMessage("PACKmapGrid");
+        //System.out.println("sending ACK MAP GRID");
         String mapGridFilter = mapGrid.replaceAll(" ", "");
         String mapGridBinary = hex2binary(mapGridFilter);
 
