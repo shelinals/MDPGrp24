@@ -350,7 +350,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         System.out.println("receive MDF!!");
                         tvStatus.setText("Exploration Done");
                         try {
-                            sendAckMDF();
+                            //sendAckMDF();
                             JSONObject jObject = new JSONObject(readMessage);
                             jString1 = jObject.getString("MapString1");
                             jString2 = jObject.getString("MapString2");
@@ -393,19 +393,19 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     //modify add per line
                     if (readMessage.contains("FORWARD")) {
                         tvStatus.setText("Robot Moving Forward");
-                        sendAckRobotStatus();
+                        //sendAckRobotStatus();
                     } else if (readMessage.contains("HOLD")) {
                         tvStatus.setText("Robot Stop");
-                        sendAckRobotStatus();
+                        //sendAckRobotStatus();
                     }else if(readMessage.contains("UTURN")){
                         tvStatus.setText("Robot Making U-turn");
-                        sendAckRobotStatus();
+                        //sendAckRobotStatus();
                     } else if (readMessage.contains("LEFT")) {
                         tvStatus.setText("Robot Turning Left");
-                        sendAckRobotStatus();
+                        //sendAckRobotStatus();
                     } else if (readMessage.contains("RIGHT")) {
                         tvStatus.setText("Robot Turning Right");
-                        sendAckRobotStatus();
+                        //sendAckRobotStatus();
                     }
                     break;
                 case MESSAGE_DEVICE_NAME:
