@@ -250,7 +250,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
             }
 
             else if (matches.contains("right")){ informationRight();}
-            else if (matches.contains("up")) {informationForward();}
+            else if (matches.contains("forward")) {informationForward();}
             else if (matches.contains("down")){informationDown();}
 
         }
@@ -309,56 +309,38 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Log.d(TAG, readMessage);
 
-                    //for robot
-                    if(readMessage.contains("robotPosition")){
-                        System.out.println("receive position!!");
-                        try {
-                            JSONObject jObject = new JSONObject(readMessage);
-                            JSONArray jArray = jObject.getJSONArray("robotPosition");
-                            System.out.println(jArray);
-                            pgv.robotPosition(jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data" + e.toString());
-                        }
-                   }
+                    if(readMessage.contains("robotPosition")&&readMessage.contains("Explore")&&readMessage.contains("Grid")&&
+                            (readMessage.contains("FORWARD")||readMessage.contains("UTURN")||readMessage.contains("LEFT")||
+                                    readMessage.contains("RIGHT"))){
 
-                    if(readMessage.contains("Explore")){
-                        System.out.println("receive exploration!!");
-                        try {
-                            JSONObject jObject = new JSONObject(readMessage);
-                            String jString = jObject.getString("Explore");
-                            System.out.println("contains Explore jString!!"+jString);
-                            pgv.mapExploration(jString);
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data exploration" + e.toString());
-                        }
-                    }
+                            System.out.println("receive all!!");
 
-                    if(readMessage.contains("Grid")){
-                        System.out.println("receive Grid!!");
-                        try {
-                            JSONObject jObject = new JSONObject(readMessage);
-                            String jString = jObject.getString("Grid");
-                            System.out.println("contains Grid jString!!"+jString);
-                            pgv.mapObstacle(jString);
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
-                        }
-                    }
+                            try{
+                                JSONObject jsonObject = new JSONObject(readMessage);
+                                JSONArray jArray = jsonObject.getJSONArray("robotPosition");
+                                String jString1 = jsonObject.getString("Explore");
+                                String jString2 = jsonObject.getString("Grid");
 
-                    if(readMessage.contains("MapString")){
-                        System.out.println("receive MDF!!");
-                        tvStatus.setText("Exploration Done");
-                        try {
-                            //sendAckMDF();
-                            JSONObject jObject = new JSONObject(readMessage);
-                            jString1 = jObject.getString("MapString1");
-                            jString2 = jObject.getString("MapString2");
-                            doWhenReceivedMDF(jString1,jString2);
+                                tvStatus.setText(jsonObject.getString("status"));
+                                pgv.updateRealTime(jArray.getInt(0), jArray.getInt(1), jArray.getString(2),jString1,jString2);
 
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
-                        }
+                            }catch(JSONException e){
+                                Log.e("JSON Parser", "Error parsing data" + e.toString());
+                            }
+
+                            if(readMessage.contains("MapString1")&&readMessage.contains("MapString2")){
+                            System.out.println("receive MDF!!");
+                            tvStatus.setText("Exploration Done");
+                                try {
+                                    JSONObject jObject = new JSONObject(readMessage);
+                                    jString1 = jObject.getString("MapString1");
+                                    jString2 = jObject.getString("MapString2");
+                                    doWhenReceivedMDF(jString1,jString2);
+
+                                }catch(JSONException e){
+                                    Log.e("JSON Parser", "Error parsing map string" + e.toString());
+                                }
+                            }
                     }
 
                     if(readMessage.contains("FINISHED")){
@@ -366,47 +348,100 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         doWhenFinishFWP();
                     }
 
-                    //amd
-                    if(readMessage.contains("Testing")){
-                        System.out.println("contains grid!!");
-                        try {
-                            JSONObject jObject = new JSONObject(readMessage);
-                            String jString = jObject.getString("grid");
-                            System.out.println("contains grid jString!!"+jString);
-                            JSONArray jArray = jObject.getJSONArray("robotPosition");
-                            System.out.println(jArray);
-                            pgv.mapInStringAMD(jString, jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data" + e.toString());
-                        }
-                    }
 
-                    if(readMessage.contains("status")){
-                        try {
-                            JSONObject jObject = new JSONObject(readMessage);
-                            String jString = jObject.getString("status");
-                            tvStatus.setText(jString);
-                        }catch(JSONException e){
-                            Log.e("JSON Parser", "Error parsing data" + e.toString());
-                        }
-                    }
-                    //modify add per line
-                    if (readMessage.contains("FORWARD")) {
-                        tvStatus.setText("Robot Moving Forward");
-                        //sendAckRobotStatus();
-                    } else if (readMessage.contains("HOLD")) {
-                        tvStatus.setText("Robot Stop");
-                        //sendAckRobotStatus();
-                    }else if(readMessage.contains("UTURN")){
-                        tvStatus.setText("Robot Making U-turn");
-                        //sendAckRobotStatus();
-                    } else if (readMessage.contains("LEFT")) {
-                        tvStatus.setText("Robot Turning Left");
-                        //sendAckRobotStatus();
-                    } else if (readMessage.contains("RIGHT")) {
-                        tvStatus.setText("Robot Turning Right");
-                        //sendAckRobotStatus();
-                    }
+                    //for robot
+//                    if(readMessage.contains("robotPosition")){
+//                        System.out.println("receive position!!");
+//                        try {
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            JSONArray jArray = jObject.getJSONArray("robotPosition");
+//                            System.out.println(jArray);
+//                            pgv.robotPosition(jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data" + e.toString());
+//                        }
+//                   }
+//
+//                    if(readMessage.contains("Explore")){
+//                        System.out.println("receive exploration!!");
+//                        try {
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            String jString = jObject.getString("Explore");
+//                            System.out.println("contains Explore jString!!"+jString);
+//                            pgv.mapExploration(jString);
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data exploration" + e.toString());
+//                        }
+//                    }
+//
+//                    if(readMessage.contains("Grid")){
+//                        System.out.println("receive Grid!!");
+//                        try {
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            String jString = jObject.getString("Grid");
+//                            System.out.println("contains Grid jString!!"+jString);
+//                            pgv.mapObstacle(jString);
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
+//                        }
+//                    }
+//
+//                    if(readMessage.contains("MapString")){
+//                        System.out.println("receive MDF!!");
+//                        tvStatus.setText("Exploration Done");
+//                        try {
+//                            //sendAckMDF();
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            jString1 = jObject.getString("MapString1");
+//                            jString2 = jObject.getString("MapString2");
+//                            doWhenReceivedMDF(jString1,jString2);
+//
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
+//                        }
+//                    }
+//
+//                    //amd
+//                    if(readMessage.contains("Testing")){
+//                        System.out.println("contains grid!!");
+//                        try {
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            String jString = jObject.getString("grid");
+//                            System.out.println("contains grid jString!!"+jString);
+//                            JSONArray jArray = jObject.getJSONArray("robotPosition");
+//                            System.out.println(jArray);
+//                            pgv.mapInStringAMD(jString, jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data" + e.toString());
+//                        }
+//                    }
+//
+//                    if(readMessage.contains("status")){
+//                        try {
+//                            JSONObject jObject = new JSONObject(readMessage);
+//                            String jString = jObject.getString("status");
+//                            tvStatus.setText(jString);
+//                        }catch(JSONException e){
+//                            Log.e("JSON Parser", "Error parsing data" + e.toString());
+//                        }
+//                    }
+//                    //modify add per line
+//                    if (readMessage.contains("FORWARD")) {
+//                        tvStatus.setText("Robot Moving Forward");
+//                        //sendAckRobotStatus();
+//                    } else if (readMessage.contains("HOLD")) {
+//                        tvStatus.setText("Robot Stop");
+//                        //sendAckRobotStatus();
+//                    }else if(readMessage.contains("UTURN")){
+//                        tvStatus.setText("Robot Making U-turn");
+//                        //sendAckRobotStatus();
+//                    } else if (readMessage.contains("LEFT")) {
+//                        tvStatus.setText("Robot Turning Left");
+//                        //sendAckRobotStatus();
+//                    } else if (readMessage.contains("RIGHT")) {
+//                        tvStatus.setText("Robot Turning Right");
+//                        //sendAckRobotStatus();
+//                    }
                     break;
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name

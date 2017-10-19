@@ -61,7 +61,6 @@ public class MainActivity extends Activity  {
 
     //TextView tvTimer2;
 
-
     // private ImageView img;
 
     // private Matrix matrix = new Matrix();
