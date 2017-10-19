@@ -771,6 +771,57 @@ public class PixelGridView extends View {
         invalidate();
     }
 
+    public void updateRealTime(int row, int column, String direction, String mapExplore, String mapGrid){
+        if (direction.equalsIgnoreCase("0")) {
+            currentAngle = 0;
+        } else if (direction.equalsIgnoreCase("90")) {
+            currentAngle = 90;
+        } else if (direction.equalsIgnoreCase("180")) {
+            currentAngle = 180;
+        } else if (direction.equalsIgnoreCase("270")) {
+            currentAngle = 270;
+        }
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                if(cellCenter[i][j]){cellCenter[i][j]=!cellCenter[i][j];}
+                if(cellFront[i][j]){cellFront[i][j]=!cellFront[i][j];}
+                if(cellRear[i][j]){cellRear[i][j]=!cellRear[i][j];}
+            }
+        }
+
+        type = "startpoint";
+        setCoordinates(row,column);
+
+        String mapExpFilter = mapExplore.replaceAll(" ", "");
+        String mapExpBinary = hex2binary(mapExpFilter);
+
+        String mapGridFilter = mapGrid.replaceAll(" ", "");
+        String mapGridBinary = hex2binary(mapGridFilter);
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                if (mapExpBinary.length() != 0 && mapGridBinary.length() != 0) {
+                    //System.out.println("cellType :" +i+"-"+j+cellType[i][j]);
+                    if(cellWaypoint[i][j] != true || cellType[i][j]!=3 || cellFront[i][j]!=true || cellCenter[i][j] != true || cellRear[i][j]!=true) {
+                        cellType[i][j] = Integer.parseInt(mapExpBinary.substring(0, 1));
+                    }
+                    //System.out.println("exploration: row" + i + "col" + j + "=" + cellType[i][j]);
+                    mapExpBinary = mapExpBinary.substring(1);
+
+                    if(cellWaypoint[i][j] != true || cellType[i][j]!=0 || cellFront[i][j]!=true || cellCenter[i][j] != true || cellRear[i][j]!=true) {
+                        if (Integer.parseInt(mapGridBinary.substring(0, 1)) == 1) {
+                            cellType[i][j] = 3;
+                        }
+                    }
+                    //System.out.println("updateobstacle: row"+i+"col"+j+"="+cellType[i][j]);
+                    mapGridBinary = mapGridBinary.substring(1);
+                }
+            }
+        }
+        invalidate();
+    }
+
     public void robotPosition(int row, int column, String direction){
         //ArenaActivity.getInstance().sendMessage("PACKrobotPos");
         //System.out.println("sending ACK robot POS");
