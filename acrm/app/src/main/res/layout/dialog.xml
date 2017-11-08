@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/dialog_waypoint">
+
+    <TextView
+        android:id="@+id/xpos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x position : "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/xpos_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input x position"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="15dp"
+        android:layout_toRightOf="@id/xpos"
+        android:inputType="number"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/ypos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="y position : "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/xpos"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/ypos_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input y position"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/ypos"
+        android:layout_below="@id/xpos_input"
+        android:inputType="number"
+        android:textSize="20sp"/>
+
+</RelativeLayout>

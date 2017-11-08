@@ -98,7 +98,7 @@
         android:id="@+id/robot_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="100dp"
         android:layout_marginRight="10dp"
         android:text="@string/robot_start"
         android:textSize="17dp"
@@ -110,7 +110,7 @@
         android:id="@+id/waypoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
         android:text="@string/waypoint"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -124,17 +124,40 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/robot_start"
         android:layout_below="@+id/robot_start"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:text="@string/select"
         android:onClick="onBtnRobotStart"/>
+
+    <EditText
+        android:id="@+id/xpos_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="x position"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/waypoint"
+        android:layout_toLeftOf="@id/pixelGridView"
+        android:inputType="number"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/ypos_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="y position"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/xpos_input"
+        android:layout_toLeftOf="@id/pixelGridView"
+        android:inputType="number"
+        android:textSize="20sp"/>
 
     <Button
         android:id="@+id/select_waypoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/robot_start"
-        android:layout_below="@+id/waypoint"
-        android:layout_marginTop="12dp"
+        android:layout_below="@id/ypos_input"
+        android:layout_marginTop="10dp"
         android:text="@string/select"
         android:onClick="onBtnWaypoint"/>
 
@@ -143,7 +166,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/select_waypoint"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
         android:textSize="17dp"
@@ -243,16 +266,6 @@
         android:layout_marginTop="45dp"
         android:layout_below="@+id/btn_up"
         android:layout_alignStart="@+id/btn_up" />
-
-    <Button
-        android:id="@+id/btn_calibrate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="Calibrate"
-        android:onClick="onBtnCalibrate"
-        android:layout_below="@+id/togglebtn_mode"
-        android:layout_alignEnd="@+id/robot_start" />
 
     <ToggleButton
         android:id="@+id/toggleButtonSwitch"

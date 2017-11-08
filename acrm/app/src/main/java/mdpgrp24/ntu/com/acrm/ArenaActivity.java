@@ -6,7 +6,9 @@ package mdpgrp24.ntu.com.acrm;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,8 +25,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -36,7 +40,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ArenaActivity extends Activity implements SensorEventListener {
 
@@ -51,7 +58,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     private String jString1;
     private String jString2;
-
 
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
@@ -107,6 +113,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private RelativeLayout mRelativeLayout;
     private PopupWindow mPopUpWindow;
     private boolean isPopOut = false;
+    private boolean exitEnable;
 
     //CAN BE CHANGED
     long startTime1 = 0;
@@ -149,13 +156,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         }
     };
 
-
-    // private ImageView img;
-
-    // private Matrix matrix = new Matrix();
-    //private float scale = 1f;
-    //private ScaleGestureDetector SGD;
-
     private void SetupBTService(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BTConn = (BluetoothConnect) getApplication();
@@ -174,7 +174,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         SetupBTService();
 
         arena = this;
-
+        exitEnable = false;
         minutes = 0;
 
         setContentView(R.layout.activity_arena);
@@ -208,7 +208,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         togglebtnMode = (ToggleButton) findViewById(R.id.togglebtn_mode);
 
         btnUpdate = (Button) findViewById(R.id.btn_update);
-        btnCalibrate = (Button) findViewById(R.id.btn_calibrate);
         togglebtnSpeech =(ToggleButton)findViewById(R.id.toggleButtonSwitch);
         btnLeft = (Button)findViewById(R.id.btn_left);
         btnRight = (Button)findViewById(R.id.btn_right);
@@ -271,7 +270,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     }
 
     public void onBtnExitPressed(View view){
-            onBackPressed();
+        exitEnable = true;
+        onBackPressed();
     }
 
     // The Handler that gets information back from the BluetoothChatService
@@ -348,59 +348,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
                         doWhenFinishFWP();
                     }
 
-
-                    //for robot
-//                    if(readMessage.contains("robotPosition")){
-//                        System.out.println("receive position!!");
-//                        try {
-//                            JSONObject jObject = new JSONObject(readMessage);
-//                            JSONArray jArray = jObject.getJSONArray("robotPosition");
-//                            System.out.println(jArray);
-//                            pgv.robotPosition(jArray.getInt(0), jArray.getInt(1), jArray.getString(2));
-//                        }catch(JSONException e){
-//                            Log.e("JSON Parser", "Error parsing data" + e.toString());
-//                        }
-//                   }
-//
-//                    if(readMessage.contains("Explore")){
-//                        System.out.println("receive exploration!!");
-//                        try {
-//                            JSONObject jObject = new JSONObject(readMessage);
-//                            String jString = jObject.getString("Explore");
-//                            System.out.println("contains Explore jString!!"+jString);
-//                            pgv.mapExploration(jString);
-//                        }catch(JSONException e){
-//                            Log.e("JSON Parser", "Error parsing data exploration" + e.toString());
-//                        }
-//                    }
-//
-//                    if(readMessage.contains("Grid")){
-//                        System.out.println("receive Grid!!");
-//                        try {
-//                            JSONObject jObject = new JSONObject(readMessage);
-//                            String jString = jObject.getString("Grid");
-//                            System.out.println("contains Grid jString!!"+jString);
-//                            pgv.mapObstacle(jString);
-//                        }catch(JSONException e){
-//                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
-//                        }
-//                    }
-//
-//                    if(readMessage.contains("MapString")){
-//                        System.out.println("receive MDF!!");
-//                        tvStatus.setText("Exploration Done");
-//                        try {
-//                            //sendAckMDF();
-//                            JSONObject jObject = new JSONObject(readMessage);
-//                            jString1 = jObject.getString("MapString1");
-//                            jString2 = jObject.getString("MapString2");
-//                            doWhenReceivedMDF(jString1,jString2);
-//
-//                        }catch(JSONException e){
-//                            Log.e("JSON Parser", "Error parsing data grid" + e.toString());
-//                        }
-//                    }
-//
 //                    //amd
 //                    if(readMessage.contains("Testing")){
 //                        System.out.println("contains grid!!");
@@ -442,6 +389,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 //                        tvStatus.setText("Robot Turning Right");
 //                        //sendAckRobotStatus();
 //                    }
+
                     break;
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -497,6 +445,16 @@ public class ArenaActivity extends Activity implements SensorEventListener {
             final Toast toast = Toast.makeText(getApplicationContext(),"Select a grid for the Robot startpoint", Toast.LENGTH_SHORT);
             toast.show();
 
+            //set directly to 1,1
+//            pgv.setType("startpoint");
+//            sendMessage("Psp:"+1+":"+1+":0");
+//            pgv.setCurrentAngle(0);
+//            pgv.setCoordinates(1,1);
+//            startclick=false;
+//
+//            final Toast toast = Toast.makeText(getApplicationContext(),"You have set the robot startpoint", Toast.LENGTH_SHORT);
+//            toast.show();
+
         }
         else{
             final Toast toast = Toast.makeText(getApplicationContext(),"You have selected the startpoint", Toast.LENGTH_SHORT);
@@ -513,11 +471,28 @@ public class ArenaActivity extends Activity implements SensorEventListener {
             //Prompt user to select one grid in the pixelgridview
             final Toast toast = Toast.makeText(getApplicationContext(),"Select a grid for the Robot waypoint", Toast.LENGTH_SHORT);
             toast.show();
+
+//              EditText editText1 = (EditText) findViewById(R.id.xpos_input);
+//              String colInput = editText1.getText().toString();
+//              EditText editText2 = (EditText) findViewById(R.id.ypos_input);
+//              String rowInput = editText2.getText().toString();
+//
+//              sendMessage("Pwp:"+rowInput+":"+colInput);
+//              onSelectWaypoint(Integer.parseInt(rowInput),Integer.parseInt(colInput));
+//              waypointclick=false;
+//              editText1.setFocusable(false);
+//              editText2.setFocusable(false);
+
         }
         else{
             final Toast toast = Toast.makeText(getApplicationContext(),"You have selected the waypoint", Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    public void onSelectWaypoint(int row, int column){
+        pgv.setType("waypoint");
+        pgv.setCoordinates(row,column);
     }
 
     public void onBtnTalk(View view){
@@ -545,7 +520,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         if(startpoint!=null) {
             pgv.moveLeft();
             //actual robot
-            //sendMessage("a2");
+            sendMessage("a2");
             //AMD test
             //sendMessage("a");
             final Toast toast = Toast.makeText(this, "Going Left", Toast.LENGTH_SHORT);
@@ -583,7 +558,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         if(startpoint!=null) {
             pgv.moveForward();
             //actual robot
-            //sendMessage("a1");
+            sendMessage("a1");
             //AMD test
             //sendMessage("w");
             final Toast toast = Toast.makeText(this, "Moving Forward", Toast.LENGTH_SHORT);
@@ -619,7 +594,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         if(startpoint!=null) {
             pgv.moveRight();
             //actual robot
-            //sendMessage("a3");
+            sendMessage("a3");
             //AMD test
             //sendMessage("d");
             final Toast toast = Toast.makeText(this, "Going Right", Toast.LENGTH_SHORT);
@@ -657,7 +632,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         if (startpoint != null) {
             pgv.moveDown();
             //actual robot
-            //sendMessage("a4");
+            sendMessage("a4");
             //AMD test
             //sendMessage("s");
             final Toast toast = Toast.makeText(this, "Moving Back", Toast.LENGTH_SHORT);
@@ -896,19 +871,13 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
-	    /*@Override
-	    protected void onResume() {
-	        // Register a listener for the sensor.
-        super.onResume();
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-	    }*/
 
-//    @Override
-//    protected void onPause() {
-//        // important to unregister the sensor when the activity pauses.
-//        super.onPause();
-//        mSensorManager.unregisterListener(this);
-//    }
-
+    @Override
+    public void onBackPressed()
+    {
+        if(exitEnable==true){
+            super.onBackPressed();
+        }
+    }
 }
 

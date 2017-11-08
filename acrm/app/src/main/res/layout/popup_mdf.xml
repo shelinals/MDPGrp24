@@ -16,6 +16,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:background="@null"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="25dp"
+        android:scaleX="3"
+        android:scaleY="3"
         />
 
     <TextView

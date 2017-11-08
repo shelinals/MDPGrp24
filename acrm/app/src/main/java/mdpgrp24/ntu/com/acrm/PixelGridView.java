@@ -57,11 +57,6 @@ public class PixelGridView extends View {
     private boolean startclick = true;
     private boolean waypointclick = true;
 
-    public String getStartpoint(){return startpoint;}
-    public String getWaypoint(){return waypoint;}
-    public boolean getWaypointClick(){return waypointclick;}
-    public boolean getStartClick(){return startclick;}
-
     private ArenaActivity arena;
 
     private boolean enableClick = false;
@@ -79,11 +74,6 @@ public class PixelGridView extends View {
         whitePaint.setColor(Color.WHITE);
         bluePaint.setColor(Color.BLUE);
         pinkPaint.setColor(Color.MAGENTA);
-
-//        rightArrow = BitmapFactory.decodeResource(this.getResources(), R.drawable.right_icon_32);
-//        leftArrow = BitmapFactory.decodeResource(this.getResources(), R.drawable.left_icon_32);
-//        upArrow = BitmapFactory.decodeResource(this.getResources(), R.drawable.up_icon_32);
-//        downArrow = BitmapFactory.decodeResource(this.getResources(), R.drawable.down_icon_32);
     }
 
     public void setNumColumns(int numColumns) {
@@ -106,18 +96,18 @@ public class PixelGridView extends View {
 
     public void setType(String type){
         this.type = type;
+        System.out.println("MODE TYPE:"+this.type);
     }
 
     public void setEnabledPGV(boolean enabled){
         this.enableClick = enabled;
     }
 
+    public void setCurrentAngle(int angle){this.currentAngle = angle;}
+
     //define the center coordinates for robot startpoint or the waypoint
     public void setCoordinates(int coor1,int coor2){
         calculateDimensions(coor1,coor2);
-
-        //testing
-        //System.out.println(coor2 + "-" + coor1);
     }
 
     @Override
@@ -199,7 +189,6 @@ public class PixelGridView extends View {
             else if(type == "waypoint"){
                 cellType[x][y] = 2;
                 cellWaypoint[x][y] = true;
-                //System.out.println("waypoint at: "+x+","+y);
             }
 
             invalidate();
@@ -208,9 +197,7 @@ public class PixelGridView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //SGD.onTouchEvent(ev);
         if (enableClick == false) {
-            //System.out.println("TOUCH Check hereeee WRONG");
             return false;
         } else {
             int touchX = (int) event.getX();
@@ -240,8 +227,6 @@ public class PixelGridView extends View {
                                         ArenaActivity.getInstance().startclick=false;
                                         ArenaActivity.getInstance().startpoint="startpoint="+point;
                                         setEnabledPGV(false);
-                                        //ArenaActivity.getInstance().sendMessage("startpoint coordinate ("+column+","+row+")");
-                                        //robot
                                         ArenaActivity.getInstance().sendMessage("Psp:"+row+":"+column+":0");
                                         System.out.println("Startpoint received! " + point);
                                         currentAngle = 0;
@@ -250,8 +235,6 @@ public class PixelGridView extends View {
                                         ArenaActivity.getInstance().waypointclick=false;
                                         ArenaActivity.getInstance().waypoint="waypoint="+point;
                                         setEnabledPGV(false);
-                                        //ArenaActivity.getInstance().sendMessage("waypoint coordinate ("+column+","+row+")");
-                                        //robot
                                         ArenaActivity.getInstance().sendMessage("Pwp:"+row+":"+column);
                                         System.out.println("Waypoint received! " + point);
                                         setCoordinates(row,column);
@@ -290,8 +273,6 @@ public class PixelGridView extends View {
             //System.out.println("Hi");
             scale *= detector.getScaleFactor();
             scale = Math.max(0.1f, Math.min(scale, 5.0f));
-            // matrix.setScale(scale, scale);
-            //img.setImageMatrix(matrix);
 
             invalidate();
             return true;
